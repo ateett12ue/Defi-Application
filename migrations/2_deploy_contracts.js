@@ -2,7 +2,7 @@ const _initial_migration = require("./1_initial_migration");
 
 const DappToken = artifacts.require("DappToken")
 const DaiToken = artifacts.require("DaiToken")
-const TokenFarm = artifacts.require("TokenFarm");
+const TokenFarm = artifacts.require("TokenFarm")
 
 module.exports = async function(deployer, network, accounts) {
     // deploy dai token for address
