@@ -97,6 +97,19 @@ contract('TokenFarm', ([owner, investor])=>{
             
             // ensure that only owner is issuing tokens
             await tokenFarm.issueToken({from: investor}).should.be.rejected;
+
+            await tokenFarm.unstakeToken({from: investor})
+
+            result = await daiToken.balanceOf(investor)
+            assert.equal(result.toString(), tokens('1000'), 'investor dai token balance should be as initial')
+
+            result = await daiToken.balanceOf(tokenFarm.address)
+            assert.equal(result.toString(), tokens('0'), 'token farm dai token balance should be as 0')
+
+            result = await tokenFarm.stakingBalance(investor)
+            assert.equal(result.toString(), tokens('0'), 'token farm dai token balance for investor should be as 0')
+            
         })
     })
+
 })

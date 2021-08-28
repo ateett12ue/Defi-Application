@@ -56,9 +56,18 @@ contract TokenFarm {
     }
 
     // 2. unStaking token (withdraw token)
-    function unstakeToken(uint _amount) public {
+    function unstakeToken() public {
+        // fetch the balance the send
+        uint balance = stakingBalance[msg.sender];
+
+        require(balance > 0, "Can't unstake zero balance");
+        
         // transfer mock dai from this contract to invester
-        daiToken.transferFrom(address(this), msg.sender, _amount);
+        daiToken.transfer(msg.sender, balance);
+
+        stakingBalance[msg.sender] = 0;
+
+        isStaking[msg.sender] = false;
     }
     // 3. issuing token (deposit interest token)
     function issueToken() public {
