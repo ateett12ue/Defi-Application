@@ -63,4 +63,40 @@ contract('TokenFarm', ([owner, investor])=>{
             assert.equal(balance.toString(), tokens('1000'))
         })
     })
+
+    describe('Farming Tokens', async()=>{
+        it('rewards invester for staking mDai tokens', async()=>{
+            // let result;
+            // Check investor balance before staking
+            let result = await daiToken.balanceOf(investor)
+            assert.equal(result.toString(), tokens('1000'), 'investor Mock Dai wallet balance correct before staking')
+
+            // stack Mock Dai tokens
+            // approving token before sending
+            await daiToken.approve(tokenFarm.address, tokens('1000'), {from: investor})
+            await tokenFarm.stakeToken(tokens('1000'), {from: investor})
+            // error if tokens not approved -- VM Exception - revert
+
+            result = await daiToken.balanceOf(investor)
+            assert.equal(result.toString(), tokens('0'), 'investor Mock Dai wallet balance correct after staking')
+
+            result = await daiToken.balanceOf(tokenFarm.address)
+            assert.equal(result.toString(), tokens('1000'), 'token farm Mock Dai wallet balance correct after staking')
+
+            result = await tokenFarm.stakingBalance(investor)
+            assert.equal(result.toString(), tokens('1000'), 'investor staking balance in token farm Mock Dai wallet after staking')
+
+            result = await tokenFarm.isStaking(investor)
+            assert.equal(result.toString(), 'true', 'investor is staking in token farm')
+
+            await tokenFarm.issueToken({from: owner})
+            
+            // checking if issuing is done correctly
+            result = await dappToken.balanceOf(investor)
+            assert.equal(result.toString(), tokens('1000'), 'investor dapp token balance should be same as invested token')
+            
+            // ensure that only owner is issuing tokens
+            await tokenFarm.issueToken({from: investor}).should.be.rejected;
+        })
+    })
 })
