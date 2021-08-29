@@ -1,6 +1,7 @@
 const TokenFarm = artifacts.require("TokenFarm")
 
-// comand to create file ==> mkdir scripts/ touch scripts/issue-tokens.js
+// command to create file ==> mkdir scripts/ touch scripts/issue-tokens.js
+// command to apply new contracts on blockchain ==> truffle migrate --reset
 
 //truffle exec scripts/issue-tokens.js
 module.exports = async function(callback) {
